@@ -1,0 +1,976 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \makeatletter
+    \newsavebox\pandoc@box
+    \newcommand*\pandocbounded[1]{%
+      \sbox\pandoc@box{#1}%
+      % scaling factors for width and height
+      \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+      \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+      % select the smaller of both
+      \ifdim\@tempb\p@<\@tempa\p@
+        \let\@tempa\@tempb
+      \fi
+      % scaling accordingly (\@tempa < 1)
+      \ifdim\@tempa\p@<\p@
+        \scalebox{\@tempa}{\usebox\pandoc@box}%
+      % scaling not needed, use as it is
+      \else
+        \usebox{\pandoc@box}%
+      \fi
+    }
+    \makeatother
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{sha256}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \subsection{SHA-256}\label{sha-256}
+
+L'algorithme SHA-256, conçu par la NSA est un algorithme de hashage qui
+permet de hasher n'importe qu'elle type de donnée, l'algorithme sha-256
+fourniras toujours une donnée de 256 bits, peu importe la taille de la
+donnée fournis, qu'elle soit supérieur ou inférieur a 256, une valeur
+retourneras toujours le même Hash, néanmoins si elle change même d'un
+seul caractère elle ce retrouveras alors complétement différentes.
+
+pour présenter l'algorithme nous allons le faire étape par étape par une
+démonstration guidé:
+
+    \subsection{Démonstration guidée (version
+simple)}\label{duxe9monstration-guiduxe9e-version-simple}
+
+Pour présenter l'algorithme, on suit un même message pas à pas :
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Point de départ
+
+  \begin{itemize}
+  \tightlist
+  \item
+    On part de 8 nombres fixes (valeurs initiales) qui servent d'état de
+    travail. On en fait une copie pour commencer le calcul.
+  \end{itemize}
+\item
+  Préparation du message
+
+  \begin{itemize}
+  \tightlist
+  \item
+    On transforme le message en bits.
+  \item
+    On ajoute un bit ``1'', puis des ``0'', puis la taille du message
+    sur 64 bits, pour que la longueur totale soit un multiple de 512.
+  \end{itemize}
+\item
+  Traitement par blocs de 512 bits
+
+  \begin{itemize}
+  \tightlist
+  \item
+    On découpe chaque bloc en 16 ``mots'' de 32 bits, puis on en
+    fabrique 48 de plus pour obtenir 64 mots.
+  \item
+    On fait 64 ``tours'' de mélange de l'état avec ces mots et des
+    constantes. C'est là que l'information du message se diffuse et se
+    brouille fortement.
+  \end{itemize}
+\item
+  Résultat final
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Après tous les blocs, on obtient 8 nombres finaux. On les écrit en
+    hexadécimal l'un à la suite de l'autre pour former une empreinte (64
+    caractères) : c'est le SHA‑256 du message.
+  \end{itemize}
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{K} \PY{o}{=} \PY{p}{[}
+    \PY{l+m+mh}{0x428A2F98}\PY{p}{,} \PY{l+m+mh}{0x71374491}\PY{p}{,} \PY{l+m+mh}{0xB5C0FBCF}\PY{p}{,} \PY{l+m+mh}{0xE9B5DBA5}\PY{p}{,} \PY{l+m+mh}{0x3956C25B}\PY{p}{,} \PY{l+m+mh}{0x59F111F1}\PY{p}{,}
+    \PY{l+m+mh}{0x923F82A4}\PY{p}{,} \PY{l+m+mh}{0xAB1C5ED5}\PY{p}{,} \PY{l+m+mh}{0xD807AA98}\PY{p}{,} \PY{l+m+mh}{0x12835B01}\PY{p}{,} \PY{l+m+mh}{0x243185BE}\PY{p}{,} \PY{l+m+mh}{0x550C7DC3}\PY{p}{,}
+    \PY{l+m+mh}{0x72BE5D74}\PY{p}{,} \PY{l+m+mh}{0x80DEB1FE}\PY{p}{,} \PY{l+m+mh}{0x9BDC06A7}\PY{p}{,} \PY{l+m+mh}{0xC19BF174}\PY{p}{,} \PY{l+m+mh}{0xE49B69C1}\PY{p}{,} \PY{l+m+mh}{0xEFBE4786}\PY{p}{,}
+    \PY{l+m+mh}{0x0FC19DC6}\PY{p}{,} \PY{l+m+mh}{0x240CA1CC}\PY{p}{,} \PY{l+m+mh}{0x2DE92C6F}\PY{p}{,} \PY{l+m+mh}{0x4A7484AA}\PY{p}{,} \PY{l+m+mh}{0x5CB0A9DC}\PY{p}{,} \PY{l+m+mh}{0x76F988DA}\PY{p}{,}
+    \PY{l+m+mh}{0x983E5152}\PY{p}{,} \PY{l+m+mh}{0xA831C66D}\PY{p}{,} \PY{l+m+mh}{0xB00327C8}\PY{p}{,} \PY{l+m+mh}{0xBF597FC7}\PY{p}{,} \PY{l+m+mh}{0xC6E00BF3}\PY{p}{,} \PY{l+m+mh}{0xD5A79147}\PY{p}{,}
+    \PY{l+m+mh}{0x06CA6351}\PY{p}{,} \PY{l+m+mh}{0x14292967}\PY{p}{,} \PY{l+m+mh}{0x27B70A85}\PY{p}{,} \PY{l+m+mh}{0x2E1B2138}\PY{p}{,} \PY{l+m+mh}{0x4D2C6DFC}\PY{p}{,} \PY{l+m+mh}{0x53380D13}\PY{p}{,}
+    \PY{l+m+mh}{0x650A7354}\PY{p}{,} \PY{l+m+mh}{0x766A0ABB}\PY{p}{,} \PY{l+m+mh}{0x81C2C92E}\PY{p}{,} \PY{l+m+mh}{0x92722C85}\PY{p}{,} \PY{l+m+mh}{0xA2BFE8A1}\PY{p}{,} \PY{l+m+mh}{0xA81A664B}\PY{p}{,}
+    \PY{l+m+mh}{0xC24B8B70}\PY{p}{,} \PY{l+m+mh}{0xC76C51A3}\PY{p}{,} \PY{l+m+mh}{0xD192E819}\PY{p}{,} \PY{l+m+mh}{0xD6990624}\PY{p}{,} \PY{l+m+mh}{0xF40E3585}\PY{p}{,} \PY{l+m+mh}{0x106AA070}\PY{p}{,}
+    \PY{l+m+mh}{0x19A4C116}\PY{p}{,} \PY{l+m+mh}{0x1E376C08}\PY{p}{,} \PY{l+m+mh}{0x2748774C}\PY{p}{,} \PY{l+m+mh}{0x34B0BCB5}\PY{p}{,} \PY{l+m+mh}{0x391C0CB3}\PY{p}{,} \PY{l+m+mh}{0x4ED8AA4A}\PY{p}{,}
+    \PY{l+m+mh}{0x5B9CCA4F}\PY{p}{,} \PY{l+m+mh}{0x682E6FF3}\PY{p}{,} \PY{l+m+mh}{0x748F82EE}\PY{p}{,} \PY{l+m+mh}{0x78A5636F}\PY{p}{,} \PY{l+m+mh}{0x84C87814}\PY{p}{,} \PY{l+m+mh}{0x8CC70208}\PY{p}{,}
+    \PY{l+m+mh}{0x90BEFFFA}\PY{p}{,} \PY{l+m+mh}{0xA4506CEB}\PY{p}{,} \PY{l+m+mh}{0xBEF9A3F7}\PY{p}{,} \PY{l+m+mh}{0xC67178F2}\PY{p}{,}
+\PY{p}{]}
+
+\PY{n}{H\PYZus{}INIT} \PY{o}{=} \PY{p}{[}
+    \PY{l+m+mh}{0x6A09E667}\PY{p}{,} \PY{l+m+mh}{0xBB67AE85}\PY{p}{,} \PY{l+m+mh}{0x3C6EF372}\PY{p}{,} \PY{l+m+mh}{0xA54FF53A}\PY{p}{,}
+    \PY{l+m+mh}{0x510E527F}\PY{p}{,} \PY{l+m+mh}{0x9B05688C}\PY{p}{,} \PY{l+m+mh}{0x1F83D9AB}\PY{p}{,} \PY{l+m+mh}{0x5BE0CD19}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Méthodes auxiliaires}\label{muxe9thodes-auxiliaires}
+
+\begin{itemize}
+\tightlist
+\item
+  rotr\_int(x, n) : rotation des bits de x vers la droite (rien n'est
+  perdu).
+\item
+  ch(x, y, z) : ``sélecteur'' bit à bit (x choisit entre y et z).
+\item
+  maj(x, y, z) : ``vote'' bit à bit (valeur majoritaire).
+\item
+  sigma0\_int / sigma1\_int : combinaisons de rotations pour bien
+  brasser.
+\end{itemize}
+
+Versions chaînes de bits (pour fabriquer W{[}16..63{]}) : - rotr,
+shiftr, xor, sigma0, sigma1.
+
+But : calculer à chaque tour des valeurs intermédiaires qui diffusent et
+brouillent l'information du message.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZgt{}\PYZgt{}} \PY{n}{n}\PY{p}{)} \PY{o}{|} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZlt{}\PYZlt{}} \PY{p}{(}\PY{l+m+mi}{32} \PY{o}{\PYZhy{}} \PY{n}{n}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{ch}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{z}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZam{}} \PY{n}{y}\PY{p}{)} \PY{o}{\PYZca{}} \PY{p}{(}\PY{o}{\PYZti{}}\PY{n}{x} \PY{o}{\PYZam{}} \PY{n}{z}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{maj}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{z}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZam{}} \PY{n}{y}\PY{p}{)} \PY{o}{\PYZca{}} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZam{}} \PY{n}{z}\PY{p}{)} \PY{o}{\PYZca{}} \PY{p}{(}\PY{n}{y} \PY{o}{\PYZam{}} \PY{n}{z}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigma0\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZca{}} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{13}\PY{p}{)} \PY{o}{\PYZca{}} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{22}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigma1\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)} \PY{o}{\PYZca{}} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)} \PY{o}{\PYZca{}} \PY{n}{rotr\PYZus{}int}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{)}
+    
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{rotr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{n}{nb}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{bits}\PY{p}{:}
+        \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{n} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{mask} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZlt{}\PYZlt{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
+    \PY{n}{nb} \PY{o}{=} \PY{n}{nb} \PY{o}{\PYZpc{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)}
+    \PY{n}{rotated} \PY{o}{=} \PY{p}{(}\PY{n}{n} \PY{o}{\PYZgt{}\PYZgt{}} \PY{n}{nb}\PY{p}{)} \PY{o}{|} \PY{p}{(}\PY{p}{(}\PY{n}{n} \PY{o}{\PYZam{}} \PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZlt{}\PYZlt{}} \PY{n}{nb}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZlt{}\PYZlt{}} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{nb}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n+nb}{format}\PY{p}{(}\PY{n}{rotated} \PY{o}{\PYZam{}} \PY{n}{mask}\PY{p}{,} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+si}{\PYZob{}}\PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{shiftr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{n}{nb}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{bits}\PY{p}{:}
+        \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+    \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+s2}{\PYZdq{}} \PY{o}{*} \PY{n}{nb} \PY{o}{+} \PY{n}{bits}\PY{p}{[}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{n}{nb}\PY{p}{]} \PY{k}{if} \PY{n}{nb} \PY{o}{\PYZlt{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+s2}{\PYZdq{}} \PY{o}{*} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{xor}\PY{p}{(}\PY{n}{bits1}\PY{p}{,} \PY{n}{bits2}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1}\PY{l+s+s2}{\PYZdq{}} \PY{k}{if} \PY{n}{bit1} \PY{o}{!=} \PY{n}{bit2} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+s2}{\PYZdq{}} \PY{k}{for} \PY{n}{bit1}\PY{p}{,} \PY{n}{bit2} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{bits1}\PY{p}{,} \PY{n}{bits2}\PY{p}{)}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigma0}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{xor}\PY{p}{(}\PY{n}{xor}\PY{p}{(}\PY{n}{rotr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{)}\PY{p}{,} \PY{n}{rotr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{18}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{shiftr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigma1}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{xor}\PY{p}{(}\PY{n}{xor}\PY{p}{(}\PY{n}{rotr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{17}\PY{p}{)}\PY{p}{,} \PY{n}{rotr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{19}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{shiftr}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{62}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{conversionBinaire}\PY{p}{(}\PY{n}{message}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}0:08b\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{message}\PY{o}{.}\PY{n}{encode}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{utf\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{remplissage}\PY{p}{(}\PY{n}{message}\PY{p}{)}\PY{p}{:}
+    \PY{n}{bits} \PY{o}{=} \PY{n}{conversionBinaire}\PY{p}{(}\PY{n}{message}\PY{p}{)}
+    \PY{n}{message\PYZus{}size} \PY{o}{=} \PY{n+nb}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{message}\PY{o}{.}\PY{n}{encode}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{utf\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{064b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{bits} \PY{o}{+}\PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{bits} \PY{o}{+}\PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+s2}{\PYZdq{}} \PY{o}{*} \PY{p}{(}\PY{p}{(}\PY{l+m+mi}{512} \PY{o}{\PYZhy{}} \PY{l+m+mi}{64}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{l+m+mi}{512}\PY{p}{)}
+    \PY{n}{bits} \PY{o}{+}\PY{o}{=} \PY{n}{message\PYZus{}size}
+    \PY{k}{return} \PY{n}{bits}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{décomposition}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{[}\PY{n}{bits}\PY{p}{[}\PY{n}{i} \PY{p}{:} \PY{n}{i} \PY{o}{+} \PY{l+m+mi}{32}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bits}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{32}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{\texorpdfstring{Fonction
+\texttt{newMot(bits,\ t)}}{Fonction newMot(bits, t)}}\label{fonction-newmotbits-t}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Paramètres d'entrée :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{bits} : Une liste de mots de 32 bits (en binaire)
+    représentant les données décomposées et étendues.
+  \item
+    \texttt{t} : Un entier représentant l'indice du mot à générer.
+  \end{itemize}
+\item
+  \textbf{Sortie :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Retourne un mot de 32 bits (en binaire) calculé à partir des mots
+    précédents et des fonctions auxiliaires \texttt{sigma0} et
+    \texttt{sigma1} expliqués précédement.
+  \end{itemize}
+\item
+  \textbf{Rôle dans SHA-256 :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Génère un nouveau mot de 32 bits (W{[}t{]}) en combinant les
+    résultats des fonctions \texttt{sigma0} et \texttt{sigma1}
+    appliquées sur des mots spécifiques, ainsi que des additions modulo
+    (2\^{}\{32\}). Ces mots étendus sont nécessaires pour les calculs
+    dans les 64 itérations de l'algorithme SHA-256.
+  \end{itemize}
+\end{itemize}
+
+\paragraph{\texorpdfstring{Fonction
+\texttt{genererListMot(word)}}{Fonction genererListMot(word)}}\label{fonction-genererlistmotword}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Paramètres d'entrée :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{word} : Une liste contenant les 16 premiers mots de 32 bits
+    (en binaire) générés à partir du message.
+  \end{itemize}
+\item
+  \textbf{Sortie :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Retourne une liste étendue contenant 64 mots de 32 bits (en
+    binaire).
+  \end{itemize}
+\item
+  \textbf{Rôle dans SHA-256 :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Étend la liste initiale de 16 mots à 64 mots en utilisant la
+    fonction \texttt{newMot}. Ces mots étendus sont utilisés dans les 64
+    itérations de l'algorithme SHA-256 pour effectuer les calculs
+    nécessaires.
+  \end{itemize}
+\item
+  \textbf{Paramètres de la fonction :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{word} : Une liste de 64 mots de 32 bits (en binaire) générés
+    à partir du message. Ces mots sont utilisés pour effectuer les
+    calculs dans chaque itération.
+  \item
+    \texttt{H} : Une liste contenant les valeurs de hachage initiales
+    (ou intermédiaires) utilisées pour démarrer les calculs.
+  \end{itemize}
+\item
+  \textbf{Ce que fait la fonction :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Initialisation :} Une copie des valeurs de hachage
+    \texttt{H} est créée dans \texttt{S} pour éviter de modifier
+    directement \texttt{H} pendant les calculs.
+  \item
+    \textbf{Boucle principale (64 itérations) :}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      À chaque itération, un mot de 32 bits (\texttt{word{[}i{]}}) est
+      converti en entier (\texttt{w\_int}).
+    \item
+      Deux valeurs temporaires, \texttt{T1} et \texttt{T2}, sont
+      calculées en utilisant des fonctions auxiliaires
+      (\texttt{sigma1\_int}, \texttt{ch}, \texttt{sigma0\_int},
+      \texttt{maj}) et des constantes (\texttt{K{[}i{]}}) définits
+      précédement.
+    \item
+      Les variables temporaires \texttt{S} sont mis à jour en effectuant
+      des décalages et des additions basées sur \texttt{T1} et
+      \texttt{T2}.
+    \end{itemize}
+  \item
+    \textbf{Mise à jour des valeurs de hachage :} Après les 64
+    itérations, les valeurs de \texttt{S} sont ajoutées aux valeurs
+    intermédiaires de \texttt{H}.
+  \item
+    \textbf{Retourne :} La liste \texttt{H} mise à jour, qui contient
+    les nouvelles valeurs de hachage après le traitement d'un bloc de
+    512 bits.
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{newMot}\PY{p}{(}\PY{n}{bits}\PY{p}{,} \PY{n}{t}\PY{p}{)}\PY{p}{:}
+    \PY{n}{s1} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{sigma1}\PY{p}{(}\PY{n}{bits}\PY{p}{[}\PY{n}{t} \PY{o}{\PYZhy{}} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{w7} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{bits}\PY{p}{[}\PY{n}{t} \PY{o}{\PYZhy{}} \PY{l+m+mi}{7}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{s0} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{sigma0}\PY{p}{(}\PY{n}{bits}\PY{p}{[}\PY{n}{t} \PY{o}{\PYZhy{}} \PY{l+m+mi}{15}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{w16} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{bits}\PY{p}{[}\PY{n}{t} \PY{o}{\PYZhy{}} \PY{l+m+mi}{16}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{result} \PY{o}{=} \PY{p}{(}\PY{n}{s1} \PY{o}{+} \PY{n}{w7} \PY{o}{+} \PY{n}{s0} \PY{o}{+} \PY{n}{w16}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{32}\PY{p}{)}
+    \PY{k}{return} \PY{n+nb}{format}\PY{p}{(}\PY{n}{result}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{032b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{genererListMot}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{64}\PY{p}{)}\PY{p}{:}
+        \PY{n}{word}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{newMot}\PY{p}{(}\PY{n}{word}\PY{p}{,} \PY{n}{i}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{word}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{\texorpdfstring{Explication simple de
+\texttt{iterateHash(word,\ H)}}{Explication simple de iterateHash(word, H)}}\label{explication-simple-de-iteratehashword-h}
+
+\begin{itemize}
+\item
+  \textbf{Objectif}: traiter un bloc (64 mots) et mettre à jour l'état
+  de hachage.
+\item
+  \textbf{Entrées}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{word}: 64 mots de 32 bits (W{[}0{]}..W{[}63{]}) issus du
+    bloc.
+  \item
+    \texttt{H}: 8 nombres de 32 bits (état courant). On les copie dans
+    \texttt{S} pour travailler.
+  \end{itemize}
+\item
+  \textbf{Boucle de 64 tours (i = 0..63)}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    On lit le mot du tour: \texttt{w\_int\ =\ int(word{[}i{]},\ 2)}.
+  \item
+    On calcule deux valeurs temporaires:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \texttt{T1\ =\ h\ +\ σ1(e)\ +\ Ch(e,f,g)\ +\ K{[}i{]}\ +\ W{[}i{]}}
+      (mod 2\^{}32)
+    \item
+      \texttt{T2\ =\ Σ0(a)\ +\ Maj(a,b,c)} (mod 2\^{}32)
+    \item
+      Intuition: \texttt{T1} injecte le mot du message et la constante
+      du tour; \texttt{T2} structure le mélange avec des rotations et
+      une ``majorité''.
+    \end{itemize}
+  \item
+    On met à jour les 8 registres (rotation des rôles):
+
+    \begin{itemize}
+    \tightlist
+    \item
+      h ← g, g ← f, f ← e
+    \item
+      e ← d + T1 (mod 2\^{}32)
+    \item
+      d ← c, c ← b, b ← a
+    \item
+      a ← T1 + T2 (mod 2\^{}32)
+    \item
+      Intuition: on ``fait tourner'' l'état et on y injecte
+      \texttt{T1}/\texttt{T2} pour diffuser l'info.
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Rétro‑addition à la fin}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Après les 64 tours, on additionne \texttt{S} dans \texttt{H} mot à
+    mot (mod 2\^{}32).
+  \item
+    Intuition: on ``cumule'' l'effet de ce bloc avec l'état global
+    (feed‑forward).
+  \end{itemize}
+\item
+  \textbf{Détails pratiques}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Le \texttt{\&\ 0xFFFFFFFF} force les résultats à rester sur 32 bits
+    (arithmétique modulo 2\^{}32).
+  \item
+    Correspondance habituelle (pour se repérer): \texttt{a=S{[}0{]}},
+    \texttt{b=S{[}1{]}}, \texttt{c=S{[}2{]}}, \texttt{d=S{[}3{]}},
+    \texttt{e=S{[}4{]}}, \texttt{f=S{[}5{]}}, \texttt{g=S{[}6{]}},
+    \texttt{h=S{[}7{]}}.
+  \end{itemize}
+\item
+  \textbf{À retenir}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    64 petits pas qui brouillent fortement les bits du bloc.
+  \item
+    \texttt{W{[}i{]}} apporte le message au tour i, \texttt{K{[}i{]}}
+    ajoute de la variété fixe, \texttt{σ/Ch/Maj} assurent le bon
+    mélange.
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{iterateHash}\PY{p}{(}\PY{n}{word}\PY{p}{,} \PY{n}{H}\PY{p}{)}\PY{p}{:}
+    \PY{n}{S} \PY{o}{=} \PY{n}{H}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{64}\PY{p}{)}\PY{p}{:}
+        \PY{n}{w\PYZus{}int} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+        \PY{n}{T1} \PY{o}{=} \PY{p}{(}
+            \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{7}\PY{p}{]} \PY{o}{+} \PY{n}{sigma1\PYZus{}int}\PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{n}{ch}\PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{n}{K}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{w\PYZus{}int}
+        \PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+        \PY{n}{T2} \PY{o}{=} \PY{p}{(}\PY{n}{sigma0\PYZus{}int}\PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{n}{maj}\PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{7}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{+} \PY{n}{T1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{S}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{T1} \PY{o}{+} \PY{n}{T2}\PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+        \PY{n}{H}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{H}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{S}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZam{}} \PY{l+m+mh}{0xFFFFFFFF}
+    \PY{k}{return} \PY{n}{H}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{\texorpdfstring{Explication de la fonction
+\texttt{sha256(message)}}{Explication de la fonction sha256(message)}}\label{explication-de-la-fonction-sha256message}
+
+La fonction \texttt{sha256} implémente l'algorithme de hachage SHA-256.
+Voici une explication étape par étape avec des mots simples :
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Initialisation des valeurs de hachage :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    On commence par copier les valeurs initiales de hachage
+    (\texttt{H\_INIT}), qui sont des constantes définies au début de
+    l'algorithme.
+  \end{itemize}
+\item
+  \textbf{Remplissage du message :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Le message est converti en une chaîne binaire, puis ``rempli''
+    (padding) pour que sa longueur soit un multiple de 512 bits, comme
+    l'exige SHA-256.
+  \end{itemize}
+\item
+  \textbf{Traitement par blocs de 512 bits :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Le message est divisé en blocs de 512 bits.
+  \item
+    Chaque bloc est décomposé en mots de 32 bits.
+  \item
+    Des mots supplémentaires sont générés pour étendre la liste à 64
+    mots.
+  \item
+    La fonction \texttt{iterateHash} est appelée pour mettre à jour les
+    valeurs de hachage en fonction des mots et des constantes de
+    l'algorithme.
+  \end{itemize}
+\item
+  \textbf{Construction du résultat final :}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Une fois tous les blocs traités, les valeurs finales de hachage
+    (contenues dans \texttt{H}) sont converties en une chaîne
+    hexadécimale.
+  \item
+    Cette chaîne représente le hash final du message.
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{Résumé}\label{ruxe9sumuxe9}
+
+La fonction prend un message en entrée, le transforme en blocs de 512
+bits, applique des opérations mathématiques et logiques pour chaque
+bloc, et retourne un hash unique de 256 bits (64 caractères
+hexadécimaux). Ce hash est une empreinte numérique du message, utilisée
+pour garantir son intégrité.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sha256}\PY{p}{(}\PY{n}{message}\PY{p}{)}\PY{p}{:}
+    \PY{n}{H} \PY{o}{=} \PY{n}{H\PYZus{}INIT}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{bin\PYZus{}str} \PY{o}{=} \PY{n}{remplissage}\PY{p}{(}\PY{n}{message}\PY{p}{)}
+
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{bin\PYZus{}str}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{512}\PY{p}{)}\PY{p}{:}
+        \PY{n}{block} \PY{o}{=} \PY{n}{bin\PYZus{}str}\PY{p}{[}\PY{n}{i} \PY{p}{:} \PY{n}{i} \PY{o}{+} \PY{l+m+mi}{512}\PY{p}{]}
+        \PY{n}{word} \PY{o}{=} \PY{n}{genererListMot}\PY{p}{(}\PY{n}{décomposition}\PY{p}{(}\PY{n}{block}\PY{p}{)}\PY{p}{)}
+        \PY{n}{H} \PY{o}{=} \PY{n}{iterateHash}\PY{p}{(}\PY{n}{word}\PY{p}{,} \PY{n}{H}\PY{p}{)}
+
+    \PY{n}{result} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+    \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n}{H}\PY{p}{:}
+        \PY{n}{result} \PY{o}{+}\PY{o}{=} \PY{n+nb}{format}\PY{p}{(}\PY{n}{h}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{08x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{result}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{66}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Exemple d\PYZsq{}utilisation}
+\PY{n}{message} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{abc}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{result} \PY{o}{=} \PY{n}{sha256}\PY{p}{(}\PY{n}{message}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SHA\PYZhy{}256 de }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{message}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{: }\PY{l+s+si}{\PYZob{}}\PY{n}{result}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+SHA-256 de 'abc':
+ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
